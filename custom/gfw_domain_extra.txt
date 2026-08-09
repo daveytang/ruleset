@@ -1,0 +1,3 @@
+# Extra GFW / proxy domains (one per line)
+# Example:
+# blocked.example.com

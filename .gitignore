@@ -1,0 +1,15 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,3 @@
+# Extra China direct domains (one per line)
+# Example:
+# example.cn
