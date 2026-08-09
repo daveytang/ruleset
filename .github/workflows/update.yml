@@ -1,0 +1,46 @@
+name: Update rulesets
+
+on:
+  schedule:
+    # Every day at 02:17 UTC
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/**"
+      - "custom/**"
+      - ".github/workflows/update.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-rulesets
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Update lists
+        run: python3 scripts/update.py
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist
+          git commit -m "chore: update CN/GFW rulesets $(date -u +%Y-%m-%d)"
+          git push
