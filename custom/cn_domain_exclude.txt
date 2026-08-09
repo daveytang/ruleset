@@ -1,1 +1,0 @@
-# China domains to exclude from CN list (one per line)

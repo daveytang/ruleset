@@ -1,3 +1,0 @@
-# CN IPv4 CIDR extras (one per line)
-# Example:
-# 1.2.3.0/24

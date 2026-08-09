@@ -1,1 +1,0 @@
-# Domains to remove from GFW list (one per line)
