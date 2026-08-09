@@ -1,0 +1,15 @@
+{
+  "updated_at": "2026-08-09T08:14:11Z",
+  "source": "https://github.com/Loyalsoldier/v2ray-rules-dat",
+  "files": [
+    {"name":"geoip.dat","bytes":17425291,"sha256":"53dc90b50877d2ed974ea81fb0fbdcbac84e189c0ac7fdcab7a966bb5e36b6e6"},
+    {"name":"geosite.dat","bytes":10588376,"sha256":"8481629701db6f547d4e1e1c4303c396588b9931de5d523dfb9fc9ab6c036024"},
+    {"name":"direct-list.txt","bytes":1420471,"sha256":"2ae65142affe864e2e666d9047575d43910146e84d4ce7e2c2356f766878c7fe"},
+    {"name":"proxy-list.txt","bytes":410201,"sha256":"c8c06d50015b7322676ceb4b59db31965b42707d8b14bece3a44f735273655f1"},
+    {"name":"reject-list.txt","bytes":3549674,"sha256":"9d6a1e1bb7d6d181b85f08ac03d3f70c7493b63320662a6ba3ebfc4a9548d42d"},
+    {"name":"apple-cn.txt","bytes":4886,"sha256":"561e7541c3a740d8f5865e8579c7438165337d783d7a4c84fc356fc2af37297a"},
+    {"name":"google-cn.txt","bytes":3023,"sha256":"35f95e0c5172cf4afac90aa542a2809ca8c84706173ef363b8ad870d27e9fa06"},
+    {"name":"gfw.txt","bytes":58801,"sha256":"8661c6c10554b13dec3e69ae8f9c83270182e64634432349928469a5a7bdcf82"},
+    {"name":"win-update.txt","bytes":16903,"sha256":"f9e53c0dbd816ac5c20606f9cff5052c3de8818f34a264c1820ae305fd947896"}
+  ]
+}
