@@ -1,0 +1,14 @@
+# 直连域名：强制走国内 DNS（阿里 223.5.5.5 / DNSPod）
+#
+# 什么时候加到这里：
+#   - 某个国内网站被 GeoSite 误判成国外，解析到了境外 IP
+#   - 你自己的内网或国内业务域名
+#
+# 格式：一行一个域名，自动匹配所有子域名。
+#   ✓ example.com          （连 www.example.com、a.b.example.com 一起生效）
+#   ✓ full:example.com     （只精确匹配这一个，不含子域名）
+#   ✗ example.com # 备注   （行尾不能写注释，同步会被拒绝）
+#   ✗ https://example.com  （不要带协议和路径）
+#
+# 优先级高于 GeoSite，也高于下面的代理域名表之外的所有自动规则。
+# 但注意：同一个域名若同时出现在 custom-remote-domain.txt，那边优先。

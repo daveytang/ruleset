@@ -1,0 +1,17 @@
+# 代理域名：强制走国外 DNS（Cloudflare 1.1.1.1）
+#
+# 什么时候加到这里：
+#   - 某个国外网站被 GeoSite 误判成国内，或解析结果被污染
+#   - 需要拿到境外解析结果的业务域名
+#
+# 格式：一行一个域名，自动匹配所有子域名。
+#   ✓ example.com          （连 www.example.com、a.b.example.com 一起生效）
+#   ✓ full:example.com     （只精确匹配这一个，不含子域名）
+#   ✗ example.com # 备注   （行尾不能写注释，同步会被拒绝）
+#   ✗ https://example.com  （不要带协议和路径）
+#
+# 本表优先级最高，会覆盖 custom-cn-domain.txt 和所有 GeoSite 判定。
+# 走这条路的查询只返回 IPv4（remote_sequence 里的 prefer_ipv4）。
+#
+# 注意：这里的域名仍然会走缓存。若需要每次实时解析（例如新的推流域名），
+# 应该加到 tiktok-live-domain.txt 而不是这里。

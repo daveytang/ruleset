@@ -1,0 +1,19 @@
+# TikTok 推流域名的补充表：走国外 DNS，并且【跳过缓存】每次实时解析
+#
+# 主表是服务器上自动更新的 geosite_tiktok.txt（GeoSite 的 tiktok 标签，36 条），
+# 这里只写主表还没收录的域名。
+#
+# 什么时候加到这里：
+#   - 抓包发现新的实际推流域名，希望多路直播分散到不同 CDN 节点而不是被
+#     缓存钉在同一台服务器上
+#
+# 格式：一行一个域名，自动匹配所有子域名。
+#   ✓ example-cdn.com
+#   ✗ example-cdn.com # 推流   （行尾不能写注释，同步会被拒绝）
+#
+# 【重要】不要添加 douyin.com 或泛 bytedance.com，会把国内抖音业务送去国外 DNS。
+# 【注意】本表的域名完全不走缓存，每次查询都打上游。只放真正需要实时解析的，
+#         放太多会明显增加上游查询量。
+byteoversea.com
+ibytedtos.com
+ibyteimg.com
