@@ -1,5 +1,5 @@
 # Mainland China IPv6 CIDR
-# Updated: 2026-08-09 07:45:28 UTC
+# Updated: 2026-08-09 08:09:43 UTC
 # Count: 1618
 #
 2001:250::/30

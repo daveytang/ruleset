@@ -1,5 +1,5 @@
 # CN IPv4 for Clash
-# Updated: 2026-08-09 07:45:28 UTC
+# Updated: 2026-08-09 08:09:43 UTC
 # Count: 7209
 payload:
   - '1.0.1.0/24'
