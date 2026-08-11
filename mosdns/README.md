@@ -1,10 +1,59 @@
-# MosDNS 自定义规则
+# MosDNS 自定义规则与配置
 
-这个目录由 DNS 服务器上的 `/etc/mosdns/bin/sync-custom` 每 5 分钟拉取一次，
-内容有变化时自动重启 MosDNS。**直接在 GitHub 网页或手机 App 上编辑这里的文件即可，
-最迟 5 分钟后线上生效**，不需要登录服务器。
+仓库路径：https://github.com/daveytang/ruleset/tree/main/mosdns
 
-## 我该改哪个文件
+## 两类文件，别搞混
+
+| 类型 | 文件 | 怎么更新到服务器 |
+|---|---|---|
+| **配置** | `config.yaml` | **手动**拉取（不会被 `sync-custom` 自动覆盖） |
+| **自定义规则** | `custom-*.txt`、`tiktok-live-domain.txt`、`hosts.txt` | `sync-custom` 每 5 分钟自动拉；也可手动跑一次 |
+
+改规则（加直连/代理域名）→ 编辑对应 txt，等 timer 或跑 `sync-custom`。  
+改分流逻辑 / 上游 → 改仓库里的 `config.yaml`，再到**每台** DNS 上执行下面的拉取命令。
+
+---
+
+## 每台机器：更新 config.yaml
+
+在服务器上执行（需要已安装到 `/etc/mosdns`）：
+
+```bash
+cd /etc/mosdns
+cp -a config.yaml "config.yaml.bak.$(date +%Y%m%d%H%M%S)"
+curl -fsSL -o config.yaml \
+  https://raw.githubusercontent.com/daveytang/ruleset/main/mosdns/config.yaml
+# 若习惯 wget，可用：
+# wget -q -O config.yaml https://raw.githubusercontent.com/daveytang/ruleset/main/mosdns/config.yaml
+systemctl restart mosdns
+systemctl is-active mosdns
+dig @127.0.0.1 www.baidu.com A +short
+dig @127.0.0.1 www.google.com A +short
+```
+
+验证期望：百度为国内 IP，谷歌为国外 IP。
+
+raw 有时有短缓存。若刚推完 GitHub 却拉到旧文件，可改用带 commit 的地址，例如：
+
+```bash
+# 把 COMMIT 换成本次提交的完整或短 SHA
+curl -fsSL -o config.yaml \
+  "https://raw.githubusercontent.com/daveytang/ruleset/COMMIT/mosdns/config.yaml"
+systemctl restart mosdns
+```
+
+---
+
+## 每台机器：立刻同步自定义规则（可选）
+
+```bash
+/etc/mosdns/bin/sync-custom
+journalctl -u mosdns-sync -n 20 --no-pager
+```
+
+---
+
+## 我该改哪个规则文件
 
 | 我想做的事 | 改这个文件 |
 |---|---|
@@ -13,59 +62,16 @@
 | 屏蔽某个域名 | `custom-block-domain.txt` |
 | 新发现的 TikTok 推流域名（走国外且不缓存） | `tiktok-live-domain.txt` |
 | 指定域名固定解析到某个 IP | `hosts.txt` |
-| （预留）旧策略用的 IP 表，当前未知域名已直走国外 | `custom-cn-ip.txt` / `custom-remote-ip.txt` |
 
-绝大多数情况下你只会用到前两个。
+一行一个域名，自动匹配子域名。行尾**不能**写 `# 备注`。
 
-## 写法
+**优先级（高→低）：** hosts → 屏蔽 → TikTok 免缓存 → `custom-remote` → `custom-cn` → 仓库规则 → GeoSite → **其余未知域名走国外 DNS**。
 
-一行一个域名，**会自动匹配所有子域名**，所以写 `example.com` 就够了，
-不用再单独写 `www.example.com`。
+人工规则整体高于自动规则。同一域名同时写在国外表和国内表时，**国外表生效**。
 
-行尾**不能**写注释。整行以 `#` 开头的注释是可以的。
-
-```
-example.com          ← 正确
-example.com # 备注    ← 错误，同步会被拒绝
-www.example.com      ← 多余，写 example.com 已经包含它
-```
-
-IP 文件一行一个 IP 或 CIDR，例如 `203.0.113.0/24`。
-
-`hosts.txt` 是唯一需要空格的文件，格式是 `域名 IP`。
-
-## 优先级
-
-从高到低，命中即停：
-
-1. `hosts.txt`
-2. `custom-block-domain.txt`（屏蔽）
-3. `tiktok-live-domain.txt`（国外，且跳过缓存）
-4. `custom-remote-domain.txt`（国外）
-5. `custom-cn-domain.txt`（国内）
-6. 仓库自动规则：GFW 表（国外）、Apple/Google/Windows 更新（国内）
-7. GeoSite 自动判定
-
-**这个目录里的文件优先级高于所有自动规则**，所以自动规则判错时，
-你在这里写一条就能纠正过来。
-
-同一个域名如果同时写进了第 4、5 两个表，**国外表生效**。
+---
 
 ## 写错了会怎样
 
-不会影响线上服务。同步脚本有三层保护：先逐行检查格式并指出出错行号，
-再用新规则试启动一个实例，加载失败就回滚，重启失败也回滚。
-任何一层不过，正在运行的 MosDNS 都不受影响。
-
-在服务器上查看同步结果：
-
-```bash
-journalctl -u mosdns-sync -n 30 --no-pager
-```
-
-## 不要动的东西
-
-不要在 `tiktok-live-domain.txt` 里添加 `douyin.com` 或 `bytedance.com`，
-会把国内抖音业务送去国外 DNS。
-
-本目录之外的 `release/` 是 Loyalsoldier 规则镜像，由 CI 自动更新，不要手改。
+`sync-custom` 有格式检查和试启动；不过则回滚，不影响正在跑的实例。  
+`config.yaml` 是你手动覆盖的，拉取前务必 `cp` 备份；重启失败可把 `.bak` 拷回去再 `systemctl restart mosdns`。

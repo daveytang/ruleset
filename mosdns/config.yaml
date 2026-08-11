@@ -1,0 +1,199 @@
+log:
+  file: "./mosdns.log"
+  level: info
+
+plugins:
+  # 由 GeoSite DAT 解包生成的域名规则。
+  - tag: geosite_cn
+    type: domain_set
+    args:
+      files:
+        - "./rules/geosite_cn.txt"
+
+  - tag: geosite_non_cn
+    type: domain_set
+    args:
+      files:
+        - "./rules/geosite_geolocation-!cn.txt"
+
+  - tag: geosite_ads
+    type: domain_set
+    args:
+      files:
+        - "./rules/geosite_category-ads-all.txt"
+
+  # 由 GeoIP DAT 解包生成的中国 IP 段。
+  - tag: geoip_cn
+    type: ip_set
+    args:
+      files:
+        - "./rules/geoip_cn.txt"
+
+  # 人工维护的覆盖规则，优先级最高。单独成表，以便排在仓库规则之前判定——
+  # 合并进同一个 domain_set 会让人工规则无法覆盖仓库规则。
+  - tag: custom_cn_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/custom-cn-domain.txt"
+
+  - tag: custom_remote_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/custom-remote-domain.txt"
+
+  # 仓库规则，优先级低于人工规则、高于 GeoSite。
+  - tag: repo_cn_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/repo-apple-cn-domain.txt"
+        - "./rules/repo-google-cn-domain.txt"
+        - "./rules/repo-win-update-domain.txt"
+
+  - tag: repo_remote_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/repo-gfw-domain.txt"
+
+  - tag: block_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/custom-block-domain.txt"
+
+  # 主表来自 geosite.dat 的 tiktok 标签，随 update-geodata 自动更新；
+  # tiktok-live-domain.txt 只放该标签尚未收录的补充域名。
+  # 不要引入 geosite 的 bytedance 标签，它含 douyin.com 等国内域名。
+  - tag: tiktok_live_domain
+    type: domain_set
+    args:
+      files:
+        - "./rules/geosite_tiktok.txt"
+        - "./rules/tiktok-live-domain.txt"
+
+  - tag: force_cn_ip
+    type: ip_set
+    args:
+      files:
+        - "./rules/custom-cn-ip.txt"
+
+  - tag: force_remote_ip
+    type: ip_set
+    args:
+      files:
+        - "./rules/custom-remote-ip.txt"
+
+  - tag: hosts
+    type: hosts
+    args:
+      files:
+        - "./rules/hosts.txt"
+
+  # 内存缓存；不落盘，过期结果最多保留一小时供异步刷新。
+  - tag: cache
+    type: cache
+    args:
+      size: 32768
+      lazy_cache_ttl: 3600
+
+  - tag: forward_local
+    type: forward
+    args:
+      concurrent: 2
+      upstreams:
+        - addr: "udp://223.5.5.5"
+        - addr: "tls://120.53.53.53:853"
+          enable_pipeline: true
+
+  - tag: forward_remote
+    type: forward
+    args:
+      concurrent: 2
+      upstreams:
+        - addr: "udp://1.1.1.1"
+        - addr: "udp://1.0.0.1"
+        - addr: "tls://1.1.1.1:853"
+          enable_pipeline: true
+
+  # 已知国内域名直接使用本地上游。
+  - tag: local_sequence
+    type: sequence
+    args:
+      - exec: $forward_local
+      - matches: has_resp
+        exec: accept
+
+  # 国际域名和 TikTok 推流使用远程上游。
+  # v5 默认不转发或发送 ECS，因此不会固定到旧配置的 ECS 地址。
+  - tag: remote_sequence
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_remote
+      - matches: has_resp
+        exec: accept
+
+  # geoip_cn / force_cn_ip / force_remote_ip 仍保留加载，便于以后改回
+  # 「未知域名按 IP 判定」策略；当前未知域名直接走远程上游。
+
+  - tag: main_sequence
+    type: sequence
+    args:
+      - exec: $hosts
+      - matches: has_resp
+        exec: accept
+
+      # ANY 查询常被滥用；保留其他现代 DNS 类型（包含 HTTPS/SVCB）。
+      - matches: qtype 255
+        exec: reject 3
+
+      - matches: "qname $block_domain"
+        exec: reject 3
+      - matches: "qname $geosite_ads"
+        exec: reject 3
+
+      # 直播推流域名必须先于缓存处理，以便每次向远程上游请求。
+      - matches: "qname $tiktok_live_domain"
+        exec: goto remote_sequence
+
+      # cache 是递归插件，必须在所有分流跳转之前执行，
+      # 否则被 goto 跳走的域名不会写入缓存。
+      - exec: $cache
+      - matches: has_resp
+        exec: accept
+
+      # 优先级：人工规则 > 仓库规则 > GeoSite。
+      # 每一层内部都是「远程」先于「本地」判定。
+      - matches: "qname $custom_remote_domain"
+        exec: goto remote_sequence
+      - matches: "qname $custom_cn_domain"
+        exec: goto local_sequence
+
+      - matches: "qname $repo_remote_domain"
+        exec: goto remote_sequence
+      - matches: "qname $repo_cn_domain"
+        exec: goto local_sequence
+
+      - matches: "qname $geosite_non_cn"
+        exec: goto remote_sequence
+      - matches: "qname $geosite_cn"
+        exec: goto local_sequence
+
+      # 未命中任何域名表：走国外 DNS（避免泄露测试/未知站先打国内递归）。
+      # 未收录的国内站可写进 custom-cn-domain.txt 纠正。
+      - exec: goto remote_sequence
+
+  - tag: udp_server
+    type: udp_server
+    args:
+      entry: main_sequence
+      listen: "0.0.0.0:53"
+
+  - tag: tcp_server
+    type: tcp_server
+    args:
+      entry: main_sequence
+      listen: "0.0.0.0:53"
