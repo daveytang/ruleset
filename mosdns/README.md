@@ -13,8 +13,7 @@
 | 屏蔽某个域名 | `custom-block-domain.txt` |
 | 新发现的 TikTok 推流域名（走国外且不缓存） | `tiktok-live-domain.txt` |
 | 指定域名固定解析到某个 IP | `hosts.txt` |
-| 未知域名解析到这些 IP 时算「国内」 | `custom-cn-ip.txt` |
-| 未知域名解析到这些 IP 时强制改问国外 | `custom-remote-ip.txt` |
+| （预留）旧策略用的 IP 表，当前未知域名已直走国外 | `custom-cn-ip.txt` / `custom-remote-ip.txt` |
 
 绝大多数情况下你只会用到前两个。
 
