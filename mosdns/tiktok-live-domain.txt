@@ -6,6 +6,7 @@
 # 格式：一行一个域名，自动匹配所有子域名。
 # 【重要】不要添加 douyin.com 或泛 bytedance.com。
 # 【注意】本表完全不走缓存，只放推流相关后缀。
+# 【注意】第三方 CDN 整域（如 qlivecdn.com）国内也会用，只写 TikTok 专用嵌套后缀。
 
 # GeoSite tiktok 未收录的补充
 byteoversea.com
@@ -14,13 +15,15 @@ ibytedtos.com
 ibyteimg.com
 
 # 推流 / 拉流 CNAME 落点（抓包：*.tiktokcdn.com → 这些后缀）
-# bytefcdn-oversea：f5-sg 等节点；不在任何表里时虽会走「未知→国外」，但会进普通缓存
-# wsdvs：l1 等节点；且在 geosite_cn 里，客户端若再查 CNAME 目标会误走国内 DNS
-# qlivecdn：pull-flv 等拉流 CNAME；在 geosite_cn，再查会误走国内
+# bytefcdn-oversea：f5-sg 等节点
+# wsdvs：l1 等节点；在 geosite_cn，再查 CNAME 会误走国内
 bytefcdn-oversea.com
 wsdvs.com
-qlivecdn.com
-rocket-cdn.com
+
+# 腾讯/第三方 CDN：不要写整域 qlivecdn.com / rocket-cdn.com（国内业务会用）
+# 只写 TikTok 嵌套形态：*.tiktokcdn.com.qlivecdn.com / *.tiktokcdn.com.rocket-cdn.com
+tiktokcdn.com.qlivecdn.com
+tiktokcdn.com.rocket-cdn.com
 
 # SDK / 直播相关落点（日志：完全未命中或易进普通缓存）
 ttdns2.com
