@@ -9,11 +9,20 @@
 
 # GeoSite tiktok 未收录的补充
 byteoversea.com
+byteoversea.net
 ibytedtos.com
 ibyteimg.com
 
-# 推流 CNAME 落点（抓包：*.tiktokcdn.com → 这些后缀）
+# 推流 / 拉流 CNAME 落点（抓包：*.tiktokcdn.com → 这些后缀）
 # bytefcdn-oversea：f5-sg 等节点；不在任何表里时虽会走「未知→国外」，但会进普通缓存
 # wsdvs：l1 等节点；且在 geosite_cn 里，客户端若再查 CNAME 目标会误走国内 DNS
+# qlivecdn：pull-flv 等拉流 CNAME；在 geosite_cn，再查会误走国内
 bytefcdn-oversea.com
 wsdvs.com
+qlivecdn.com
+rocket-cdn.com
+
+# SDK / 直播相关落点（日志：完全未命中或易进普通缓存）
+ttdns2.com
+byteglb.com
+byteeffecttos-g.com
