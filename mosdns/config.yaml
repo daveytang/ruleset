@@ -113,9 +113,9 @@ plugins:
     args:
       concurrent: 2
       upstreams:
-        - addr: "udp://1.1.1.1"
-        - addr: "udp://1.0.0.1"
-        - addr: "tls://1.1.1.1:853"
+        - addr: "udp://8.8.8.8"
+        - addr: "udp://8.8.4.4"
+        - addr: "tls://dns.google:853"
           enable_pipeline: true
 
   # 已知国内域名直接使用本地上游。
