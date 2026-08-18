@@ -12,3 +12,5 @@
 #
 # 优先级高于 GeoSite，也高于下面的代理域名表之外的所有自动规则。
 # 但注意：同一个域名若同时出现在 custom-remote-domain.txt，那边优先。
+
+kg.qq.com
