@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-08-18T03:07:51Z",
+  "updated_at": "2026-08-19T03:10:09Z",
   "source": "https://github.com/Loyalsoldier/v2ray-rules-dat",
   "files": [
     {"name":"geoip.dat","bytes":17344919,"sha256":"b406dd3759037188b0674b110dcaf33664a699c0518152d0ca0d9023fc774c6b"},
-    {"name":"geosite.dat","bytes":10965529,"sha256":"17f6e2834c7b737b245eecbdbc121c590068d5a28ad23e36a06440c5623255b4"},
+    {"name":"geosite.dat","bytes":10972762,"sha256":"24c06bb4e16b0af0d8ace68ed051b91aab4d9ee16a0fb3161e293df6a0c92d44"},
     {"name":"direct-list.txt","bytes":1420554,"sha256":"76a841b4691b28e39b2919b4923a46c802e71372eabe73656257a6411af07def"},
-    {"name":"proxy-list.txt","bytes":410985,"sha256":"4454e69e18158f00eaa7919946519e1f5f453398e4739eea83192b292cd8dcf2"},
-    {"name":"reject-list.txt","bytes":3855734,"sha256":"96abb1814a1a69242a0a79225d119dd6ad71c94fed254568dd26e2c2fb3d9a41"},
+    {"name":"proxy-list.txt","bytes":410997,"sha256":"c2abec2818348266190a8b8e6a3a83fa1e01c4ff50430035ba2829c418bb2fbd"},
+    {"name":"reject-list.txt","bytes":3861334,"sha256":"3e2e385ea13c2436757dfab87c027754eb0964a609549f9d214b9cffc90ee715"},
     {"name":"apple-cn.txt","bytes":4886,"sha256":"561e7541c3a740d8f5865e8579c7438165337d783d7a4c84fc356fc2af37297a"},
     {"name":"google-cn.txt","bytes":3023,"sha256":"35f95e0c5172cf4afac90aa542a2809ca8c84706173ef363b8ad870d27e9fa06"},
-    {"name":"gfw.txt","bytes":58905,"sha256":"86b77089cb5ff5b0c3fd83927e67d833c6627f8ea924f4ffb86d54efc7eff660"},
+    {"name":"gfw.txt","bytes":58952,"sha256":"926e8f76281955f22e6159cc485b4ec19865e6d3445cdd1e442b07f40e30f90e"},
     {"name":"win-update.txt","bytes":16903,"sha256":"f9e53c0dbd816ac5c20606f9cff5052c3de8818f34a264c1820ae305fd947896"}
   ]
 }
