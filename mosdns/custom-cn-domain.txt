@@ -14,3 +14,4 @@
 # 但注意：同一个域名若同时出现在 custom-remote-domain.txt，那边优先。
 
 kg.qq.com
+todesk.com
