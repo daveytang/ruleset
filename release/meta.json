@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-08-27T12:45:44Z",
+  "updated_at": "2026-08-28T14:19:33Z",
   "source": "https://github.com/Loyalsoldier/v2ray-rules-dat",
   "files": [
-    {"name":"geoip.dat","bytes":17185495,"sha256":"8ebcb11333f7deed4bf2740f2ce3249aa8997ef03d437150c7ae373c011cd72a"},
-    {"name":"geosite.dat","bytes":11014207,"sha256":"839be885c15351e807d3434b0b7e048975e04c94f078ce2d9c4262c22b856693"},
-    {"name":"direct-list.txt","bytes":1426367,"sha256":"6e1efb4b54e0cd1333d8d9a54de778ec9c3cf042addc87f0abee3c36db45bcfa"},
-    {"name":"proxy-list.txt","bytes":411303,"sha256":"25ef169d5fcc2d32415a8f2f38fce1be478d8160532456af2ee3c171532c1d70"},
-    {"name":"reject-list.txt","bytes":3882578,"sha256":"0d8af512569e57ca84608a191ae81c6679f47fe6a6567e6c57608e3d95995533"},
+    {"name":"geoip.dat","bytes":17224069,"sha256":"0d5d2ba0c5a5c58027fd1347a6afd57c9470799b6bb3cbc274fd4657ed8de382"},
+    {"name":"geosite.dat","bytes":11007565,"sha256":"32ee712fdab10e7f55ef941f722eb59cfe18ee66c145111ea7f3a88a6813459d"},
+    {"name":"direct-list.txt","bytes":1420784,"sha256":"e1719ab109f86ab76891056360e379b114bb9c2763fa4c099ff37fb313ca2f8c"},
+    {"name":"proxy-list.txt","bytes":411321,"sha256":"0496fdfb6277cf8dc3ed7d74ec596a36e317050e91adffd01bbd3e0a9fd489cc"},
+    {"name":"reject-list.txt","bytes":3889090,"sha256":"4ca427969844552cad0a1de9878a3acedac32442744d2c455d58fd581633f6ed"},
     {"name":"apple-cn.txt","bytes":4920,"sha256":"9fbb3bc9b6c9d81c4b1887ce4c81f816a676618592c3dbd2a8c742e14fbba32b"},
     {"name":"google-cn.txt","bytes":3023,"sha256":"35f95e0c5172cf4afac90aa542a2809ca8c84706173ef363b8ad870d27e9fa06"},
-    {"name":"gfw.txt","bytes":59070,"sha256":"a89c4de1b0ad7ae5f328329cd75353c4f322dca1f526bcb878790b80e385795d"},
+    {"name":"gfw.txt","bytes":59079,"sha256":"2ccb4de4bec01c520fa4af6cbe60bbe5957935a3ca6d270f50bed0e5222e4956"},
     {"name":"win-update.txt","bytes":16903,"sha256":"f9e53c0dbd816ac5c20606f9cff5052c3de8818f34a264c1820ae305fd947896"}
   ]
 }
