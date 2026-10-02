@@ -15,3 +15,4 @@
 
 kg.qq.com
 todesk.com
+full:fcdntest-origin.byte-test.com
