@@ -64,6 +64,14 @@ plugins:
       files:
         - "./rules/custom-block-domain.txt"
 
+  # 广告表里的官方 TikTok 统计/WAF 域名放行；仿冒 *tiktok* 广告站仍拦截。
+  - tag: tiktok_ads_except
+    type: domain_set
+    args:
+      files:
+        - "./rules/geosite_tiktok.txt"
+        - "./rules/tiktok-live-domain.txt"
+
   # 主表来自 geosite.dat 的 tiktok 标签，随 update-geodata 自动更新；
   # tiktok-live-domain.txt 只放该标签尚未收录的补充域名。
   # 不要引入 geosite 的 bytedance 标签，它含 douyin.com 等国内域名。
@@ -152,7 +160,9 @@ plugins:
 
       - matches: "qname $block_domain"
         exec: reject 3
-      - matches: "qname $geosite_ads"
+      - matches:
+          - qname $geosite_ads
+          - "!qname $tiktok_ads_except"
         exec: reject 3
 
       # 直播推流域名必须先于缓存处理，以便每次向远程上游请求。
