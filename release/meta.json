@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T07:33:46Z",
+  "updated_at": "2026-10-26T07:45:44Z",
   "source": "https://github.com/Loyalsoldier/v2ray-rules-dat",
   "files": [
     {"name":"geoip.dat","bytes":16570425,"sha256":"a6271d3c96361d96156e6d3f7cf1550ef21b00d2f951deb772f464db91e89ac5"},
