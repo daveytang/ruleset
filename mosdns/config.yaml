@@ -16,12 +16,6 @@ plugins:
       files:
         - "./rules/geosite_geolocation-!cn.txt"
 
-  - tag: geosite_ads
-    type: domain_set
-    args:
-      files:
-        - "./rules/geosite_category-ads-all.txt"
-
   # 由 GeoIP DAT 解包生成的中国 IP 段。
   - tag: geoip_cn
     type: ip_set
@@ -57,21 +51,6 @@ plugins:
     args:
       files:
         - "./rules/repo-gfw-domain.txt"
-
-  - tag: block_domain
-    type: domain_set
-    args:
-      files:
-        - "./rules/custom-block-domain.txt"
-
-  # 广告表里的官方 TikTok 统计/WAF 域名放行；仿冒 *tiktok* 广告站仍拦截。
-  - tag: tiktok_ads_except
-    type: domain_set
-    args:
-      files:
-        - "./rules/geosite_tiktok.txt"
-        - "./rules/tiktok-live-domain.txt"
-        - "./rules/douyin-ads-except.txt"
 
   # 主表来自 geosite.dat 的 tiktok 标签，随 update-geodata 自动更新；
   # tiktok-live-domain.txt 只放该标签尚未收录的补充域名。
@@ -183,13 +162,6 @@ plugins:
 
       # ANY 查询常被滥用；保留其他现代 DNS 类型（包含 HTTPS/SVCB）。
       - matches: qtype 255
-        exec: reject 3
-
-      - matches: "qname $block_domain"
-        exec: reject 3
-      - matches:
-          - qname $geosite_ads
-          - "!qname $tiktok_ads_except"
         exec: reject 3
 
       # 直播推流域名必须先于缓存处理，以便每次向远程上游请求。

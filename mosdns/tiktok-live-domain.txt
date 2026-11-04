@@ -34,9 +34,3 @@ byteeffecttos-g.com
 # 不要加 snssdk.com（抖音国内）。
 isnssdk.com
 sgsnssdk.com
-
-# 只精确放行直播会话里被广告表 NXDOMAIN、或国内表解析到大陆的主机。
-# 不要写成 zijieapi.com / douyin.com / bytegecko.com / bdurl.net 整域。
-full:lf-webcast-gr-sourcecdn.bytegecko.com
-full:streamingtool.douyin.com
-full:dig.bdurl.net
