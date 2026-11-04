@@ -29,3 +29,8 @@ tiktokcdn.com.rocket-cdn.com
 ttdns2.com
 byteglb.com
 byteeffecttos-g.com
+
+# 海外 SDK / TNC：广告表会 NXDOMAIN。福袋等直播功能走 tnc16-alisg.isnssdk.com
+# 不要加 snssdk.com（抖音国内）。
+isnssdk.com
+sgsnssdk.com
