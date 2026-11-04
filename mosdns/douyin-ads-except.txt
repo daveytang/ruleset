@@ -1,2 +1,4 @@
 # 抖音国内域名。广告表会拦，只用来跳过拦截，不送去国外 DNS。
 full:mcs.zijieapi.com
+full:pc-mon.zijieapi.com
+full:seraph.zijieapi.com
