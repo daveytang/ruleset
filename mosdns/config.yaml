@@ -71,6 +71,7 @@ plugins:
       files:
         - "./rules/geosite_tiktok.txt"
         - "./rules/tiktok-live-domain.txt"
+        - "./rules/douyin-ads-except.txt"
 
   # 主表来自 geosite.dat 的 tiktok 标签，随 update-geodata 自动更新；
   # tiktok-live-domain.txt 只放该标签尚未收录的补充域名。
@@ -121,17 +122,42 @@ plugins:
     args:
       concurrent: 2
       upstreams:
-        - addr: "udp://1.1.1.1"
-        - addr: "udp://1.0.0.1"
-        - addr: "tls://cloudflare-dns.com:853"
-          dial_addr: "1.1.1.1:853"
-          enable_pipeline: true
+        - addr: "tcp://1.1.1.1"
+        - addr: "tcp://1.0.0.1"
 
   # 已知国内域名直接使用本地上游。
   - tag: local_sequence
     type: sequence
     args:
       - exec: $forward_local
+      - matches: has_resp
+        exec: accept
+
+  # 直播域名：丢掉含大陆地址的应答再查，避免网关把广州节点送进国内线路。
+  # 连查 4 次仍只有大陆地址时，接受最后一次。
+  - tag: remote_nocn_sequence
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_remote
+      - matches:
+          - has_resp
+          - "!resp_ip $geoip_cn"
+        exec: accept
+      - exec: drop_resp
+      - exec: $forward_remote
+      - matches:
+          - has_resp
+          - "!resp_ip $geoip_cn"
+        exec: accept
+      - exec: drop_resp
+      - exec: $forward_remote
+      - matches:
+          - has_resp
+          - "!resp_ip $geoip_cn"
+        exec: accept
+      - exec: drop_resp
+      - exec: $forward_remote
       - matches: has_resp
         exec: accept
 
@@ -167,8 +193,9 @@ plugins:
         exec: reject 3
 
       # 直播推流域名必须先于缓存处理，以便每次向远程上游请求。
+      # 应答里若夹着大陆地址就丢掉重查。
       - matches: "qname $tiktok_live_domain"
-        exec: goto remote_sequence
+        exec: goto remote_nocn_sequence
 
       # cache 是递归插件，必须在所有分流跳转之前执行，
       # 否则被 goto 跳走的域名不会写入缓存。
