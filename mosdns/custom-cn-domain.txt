@@ -18,3 +18,4 @@ todesk.com
 byte-test.com
 ip.cn
 xuangucloud.com
+liangzi.yccm.love
